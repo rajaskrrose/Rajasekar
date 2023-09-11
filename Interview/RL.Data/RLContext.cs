@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RL.Data.DataModels;
 using RL.Data.DataModels.Common;
 
@@ -8,6 +8,7 @@ public class RLContext : DbContext
     public DbSet<Plan> Plans { get; set; }
     public DbSet<PlanProcedure> PlanProcedures { get; set; }
     public DbSet<Procedure> Procedures { get; set; }
+    public DbSet<PlanUser> PlanUsers { get; set; }
     public DbSet<User> Users { get; set; }
 
     public RLContext() { }
@@ -22,6 +23,13 @@ public class RLContext : DbContext
             typeBuilder.HasKey(pp => new { pp.PlanId, pp.ProcedureId });
             typeBuilder.HasOne(pp => pp.Plan).WithMany(p => p.PlanProcedures);
             typeBuilder.HasOne(pp => pp.Procedure).WithMany();
+        });
+
+        builder.Entity<PlanUser>(typeBuilder =>
+        {
+
+            typeBuilder.HasKey("PlanId", "ProcedureId", "UserId");
+            typeBuilder.ToTable("PlanUsers");
         });
 
         //Add procedure Seed Data
